@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext(connStr);
 
 builder.Services.AddValidators();
+builder.Services.AddMapster();
 
 var app = builder.Build();
 

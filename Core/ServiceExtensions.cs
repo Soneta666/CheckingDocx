@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,11 @@ namespace Core
 {
     public static class ServiceExtensions
     {
+        public static void AddMapster(this IServiceCollection services)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            services.AddSingleton(assemblies);
+        }
         public static void AddValidators(this IServiceCollection services)
         {
             services.AddFluentValidationAutoValidation();
