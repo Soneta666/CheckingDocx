@@ -12,6 +12,7 @@ namespace Core.Entities
 
         public string Name { get; set; }
 
+        public uint RequirementId { get; set; }
         public Requirement Requirement { get; set; }
     }
 }
