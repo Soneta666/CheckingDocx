@@ -10,7 +10,8 @@ namespace Core.Interfaces
 {
     public interface IValuesService
     {
-        List<Value> GetValues();
+        List<Value> GetAll();
+        Value? GetById(int id);
 
         void Create(ValueDTO value);
 

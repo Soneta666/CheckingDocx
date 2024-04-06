@@ -10,7 +10,9 @@ namespace Core.Interfaces
 {
     public interface IRequirementsService
     {
-        List<Requirement> GetRequirements();
+        List<Requirement> GetAll();
+
+        Requirement? GetById(int id);
 
         void Create(RequirementDTO requirement);
 
