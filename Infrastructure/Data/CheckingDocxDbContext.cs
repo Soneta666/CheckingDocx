@@ -18,6 +18,11 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.SeedRequirements();
+            modelBuilder.SeedValues();
+
+            modelBuilder.ApplyConfiguration(new RequirementConfigurations());
+            modelBuilder.ApplyConfiguration(new ValueConfigurations());
 
             modelBuilder.ApplyConfiguration(new ValueConfigurations());
 
