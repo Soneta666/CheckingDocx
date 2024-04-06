@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.SeedRequirements();
+            modelBuilder.SeedValues();
+
+            modelBuilder.ApplyConfiguration(new RequirementConfigurations());
+            modelBuilder.ApplyConfiguration(new ValueConfigurations());
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
