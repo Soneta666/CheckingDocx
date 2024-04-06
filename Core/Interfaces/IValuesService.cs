@@ -15,7 +15,7 @@ namespace Core.Interfaces
 
         void Create(ValueDTO value);
 
-        void Edit(Value value);
+        void Update(Value value);
 
         void Delete(int id);
     }

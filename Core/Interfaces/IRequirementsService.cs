@@ -16,7 +16,7 @@ namespace Core.Interfaces
 
         void Create(RequirementDTO requirement);
 
-        void Edit(Requirement requirement);
+        void Update(Requirement requirement);
 
         void Delete(int id);
     }
