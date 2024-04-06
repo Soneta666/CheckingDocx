@@ -14,7 +14,7 @@ namespace Core.Interfaces
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             params string[] includeProperties);
 
-        //TEntity GetByID(object id);
+        TEntity GetByID(object id);
 
         void Insert(TEntity entity);
 

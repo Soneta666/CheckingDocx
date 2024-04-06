@@ -53,10 +53,10 @@ namespace Infrastructure
             }
         }
 
-        //public virtual TEntity GetByID(object id)
-        //{
-        //    return dbSet.Find(id);
-        //}
+        public virtual TEntity GetByID(object id)
+        {
+            return dbSet.Find(id);
+        }
 
         public virtual void Insert(TEntity entity)
         {
