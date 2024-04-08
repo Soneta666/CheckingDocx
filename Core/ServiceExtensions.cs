@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Core.Interfaces;
+using Core.Services;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
@@ -15,13 +17,19 @@ namespace Core
     {
         public static void AddMapster(this IServiceCollection services)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            services.AddSingleton(assemblies);
+            //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //services.AddSingleton(assemblies);
+            services.AddSingleton<IMapper, Mapper>();
         }
         public static void AddValidators(this IServiceCollection services)
         {
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+        }
+        public static void AddCustomServices(this IServiceCollection services)
+        {
+            services.AddScoped<IRequirementsService, RequirementsService>();
+            services.AddScoped<IValuesService, ValuesService>();
         }
     }
 }

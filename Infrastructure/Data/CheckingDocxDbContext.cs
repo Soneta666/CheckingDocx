@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class CheckingDocxDbContext : DbContext
+    internal class CheckingDocxDbContext : DbContext
     {
         public CheckingDocxDbContext() : base() { }
         public CheckingDocxDbContext(DbContextOptions options) : base(options) { }
@@ -24,9 +24,7 @@ namespace Infrastructure.Data
             modelBuilder.ApplyConfiguration(new RequirementConfigurations());
             modelBuilder.ApplyConfiguration(new ValueConfigurations());
 
-            modelBuilder.ApplyConfiguration(new ValueConfigurations());
-
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

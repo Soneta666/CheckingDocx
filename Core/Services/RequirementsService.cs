@@ -43,9 +43,9 @@ namespace Core.Services
             requirementRepo.Save();
         }
 
-        public void Update(Requirement requirement)
+        public void Update(RequirementDTO requirement)
         {
-            requirementRepo.Update(requirement);
+            requirementRepo.Update(mapper.Map<Requirement>(requirement));
             requirementRepo.Save();
         }
 
