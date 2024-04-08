@@ -41,9 +41,9 @@ namespace Core.Services
             valueRepo.Save();
         }
 
-        public void Update(Value value)
+        public void Update(ValueDTO value)
         {
-            valueRepo.Update(value);
+            valueRepo.Update(mapper.Map<Value>(value));
             valueRepo.Save();
         }
 

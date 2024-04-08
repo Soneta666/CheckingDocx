@@ -1,6 +1,7 @@
 using Core;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +16,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext(connStr);
 
-builder.Services.AddValidators();
+builder.Services.AddRepository();
+builder.Services.AddCustomServices();
 builder.Services.AddMapster();
+builder.Services.AddValidators();
 
 var app = builder.Build();
 
