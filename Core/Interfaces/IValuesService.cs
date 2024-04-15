@@ -1,5 +1,4 @@
 ﻿using Core.DTOs;
-using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +9,13 @@ namespace Core.Interfaces
 {
     public interface IValuesService
     {
-        List<Value> GetAll();
-        Value? GetById(int id);
+        Task<IEnumerable<ValueDTO>> GetAll();
+        Task<ValueDTO?> GetById(int id);
 
-        void Create(ValueDTO value);
+        Task Create(ValueDTO value);
 
-        void Update(ValueDTO value);
+        Task Update(ValueDTO value);
 
-        void Delete(int id);
+        Task Delete(int id);
     }
 }

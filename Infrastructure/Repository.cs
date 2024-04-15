@@ -21,67 +21,52 @@ namespace Infrastructure
             this.dbSet = context.Set<TEntity>();
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            params string[] includeProperties)
+        public async virtual Task<IEnumerable<TEntity>> GetAll()
         {
-            IQueryable<TEntity> query = dbSet;
+            return await dbSet.ToListAsync();
+        }
 
-            if (filter != null)
+        public async virtual Task<TEntity?> GetByID(object id)
+        {
+            return await dbSet.FindAsync(id);
+        }
+
+        public async virtual Task Insert(TEntity entity)
+        {
+            await dbSet.FindAsync(entity);
+        }
+
+        public async virtual Task Delete(object id)
+        {
+            TEntity entityToDelete = await dbSet.FindAsync(id);
+            if (entityToDelete != null)
+                await Delete(entityToDelete);
+        }
+
+        public virtual Task Delete(TEntity entityToDelete)
+        {
+            return Task.Run(() =>
             {
-                query = query.Where(filter);
-            }
+                if (context.Entry(entityToDelete).State == EntityState.Detached)
+                {
+                    dbSet.Attach(entityToDelete);
+                }
+                dbSet.Remove(entityToDelete);
+            });
+        }
 
-            foreach (var includeProperty in includeProperties)
+        public virtual Task Update(TEntity entityToUpdate)
+        {
+           return Task.Run(() =>
             {
-                query = query.Include(includeProperty);
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-            else
-            {
-                return query.ToList();
-            }
-        }
-
-        public virtual TEntity GetByID(object id)
-        {
-            return dbSet.Find(id);
-        }
-
-        public virtual void Insert(TEntity entity)
-        {
-            dbSet.Add(entity);
-        }
-
-        public virtual void Delete(object id)
-        {
-            TEntity entityToDelete = dbSet.Find(id);
-            Delete(entityToDelete);
-        }
-
-        public virtual void Delete(TEntity entityToDelete)
-        {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
-        }
-
-        public virtual void Update(TEntity entityToUpdate)
-        {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+                dbSet.Attach(entityToUpdate);
+                context.Entry(entityToUpdate).State = EntityState.Modified;
+            });
         }
     }
 }

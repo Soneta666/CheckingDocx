@@ -21,38 +21,39 @@ namespace Core.Services
             this.mapper = mapper;
         }
 
-        public List<Value> GetAll()
+        public async Task<IEnumerable<ValueDTO>> GetAll()
         {
-            return valueRepo.Get().ToList();
+            var result = await valueRepo.GetAll();
+            return mapper.Map<IEnumerable<ValueDTO>>(result);
         }
 
-        public Value? GetById(int id)
+        public async Task<ValueDTO?> GetById(int id)
         {
             if (id < 0) return null;
 
-            Value value = valueRepo.Get().FirstOrDefault(r => r.Id == id);
+            var value = valueRepo.GetByID(id);
 
-            return value;
+            return mapper.Map<ValueDTO>(value);
         }
 
-        public void Create(ValueDTO value)
+        public async Task Create(ValueDTO value)
         {
-            valueRepo.Insert(mapper.Map<Value>(value));
-            valueRepo.Save();
+            await valueRepo.Insert(mapper.Map<Value>(value));
+            await valueRepo.Save();
         }
 
-        public void Update(ValueDTO value)
+        public async Task Update(ValueDTO value)
         {
-            valueRepo.Update(mapper.Map<Value>(value));
-            valueRepo.Save();
+            await valueRepo.Update(mapper.Map<Value>(value));
+            await valueRepo.Save();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            Value value = GetById(id);
+            if (await valueRepo.GetByID(id) == null) return;
 
-            valueRepo.Delete(value);
-            valueRepo.Save();
+            await valueRepo.Delete(id);
+            await valueRepo.Save();
         }
     }
 }
