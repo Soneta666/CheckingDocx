@@ -16,44 +16,44 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(requirementsService.GetAll());
+            return Ok(await requirementsService.GetAll());
         }
 
-        [HttpGet("{id:int}")]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] uint id)
         {
-            var item = requirementsService.GetById(id);
+            var item = await requirementsService.GetById(id);
             if(item == null) return NotFound();
 
             return Ok(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] RequirementDTO requirementDTO)
+        public async Task<IActionResult> Create([FromBody] RequirementDTO requirementDTO)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            requirementsService.Create(requirementDTO);
+            await requirementsService.Create(requirementDTO);
 
             return Ok();
         }
 
         [HttpPut]
-        public IActionResult Edit([FromBody] RequirementDTO requirementDTO)
+        public async Task<IActionResult> Edit([FromBody] RequirementDTO requirementDTO)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            requirementsService.Update(requirementDTO);
+            await requirementsService.Update(requirementDTO);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] uint id)
         {
-            requirementsService.Delete(id);
+            await requirementsService.Delete(id);
 
             return Ok();
         }

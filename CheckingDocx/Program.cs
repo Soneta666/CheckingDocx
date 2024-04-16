@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 string? connStr = builder.Configuration.GetConnectionString("LocalDb");
 
 // Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

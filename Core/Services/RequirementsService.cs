@@ -1,6 +1,7 @@
 ﻿using Core.DTOs;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
@@ -13,50 +14,47 @@ namespace Core.Services
     public class RequirementsService : IRequirementsService
     {
         private readonly IRepository<Requirement> requirementRepo;
-        private readonly IRepository<Value> valueRepo;
         private readonly IMapper mapper;
 
-        public RequirementsService(IRepository<Requirement> requirementRepo, IRepository<Value> valueRepo, IMapper mapper)
+        public RequirementsService(IRepository<Requirement> requirementRepo, IMapper mapper)
         {
             this.requirementRepo = requirementRepo;
-            this.valueRepo = valueRepo;
             this.mapper = mapper;
         }
 
-        public List<Requirement> GetAll()
+        public async Task<IEnumerable<RequirementDTO>> GetAll()
         {
-            return requirementRepo.Get().ToList();
+            var result = await requirementRepo.GetAll();
+            return mapper.Map<IEnumerable<RequirementDTO>>(result);
         }
         
-        public Requirement? GetById(int id)
+        public async Task<RequirementDTO?> GetById(uint id)
         {
             if(id < 0) return null;
 
-            Requirement requirement = requirementRepo.Get().FirstOrDefault(r => r.Id == id);
+            Requirement requirement = await requirementRepo.GetItemBySpec(new Requirements.ById(id));
 
-            return requirement;
+            return mapper.Map<RequirementDTO>(requirement);
         }
 
-        public void Create(RequirementDTO requirement)
+        public async Task Create(RequirementDTO requirement)
         {
-            requirementRepo.Insert(mapper.Map<Requirement>(requirement));
-            requirementRepo.Save();
+            await requirementRepo.Insert(mapper.Map<Requirement>(requirement));
+            await requirementRepo.Save();
         }
 
-        public void Update(RequirementDTO requirement)
+        public async Task Update(RequirementDTO requirement)
         {
-            requirementRepo.Update(mapper.Map<Requirement>(requirement));
-            requirementRepo.Save();
+            await requirementRepo.Update(mapper.Map<Requirement>(requirement));
+            await requirementRepo.Save();
         }
 
-        public void Delete(int id)
+        public async Task Delete(uint id)
         {
-            if (valueRepo.Get().FirstOrDefault(v => v.RequirementId == id) != null) return;
+            if(await requirementRepo.GetById(id) == null) return;
 
-            Requirement requirement = GetById(id);
-
-            requirementRepo.Delete(requirement);
-            requirementRepo.Save();
+            await requirementRepo.Delete(id);
+            await requirementRepo.Save();
         }
     }
 }

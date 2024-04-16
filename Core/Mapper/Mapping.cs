@@ -14,9 +14,13 @@ namespace Core.MapperProfiles
         public static void ConfigureMappings()
         {
             TypeAdapterConfig<Value, ValueDTO>
-                .NewConfig();
+                .NewConfig()
+                .Map(dest => dest.Requirement, src => src.Requirement);
+            TypeAdapterConfig<ValueDTO, Value>.NewConfig();
             
             TypeAdapterConfig<Requirement, RequirementDTO>
+                .NewConfig();
+            TypeAdapterConfig<RequirementDTO, Requirement>
                 .NewConfig();
         }
     }

@@ -17,44 +17,44 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(valuesService.GetAll());
+            return Ok(await valuesService.GetAll());
         }
 
-        [HttpGet("{id:int}")]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] uint id)
         {
-            var item = valuesService.GetById(id);
+            var item = await valuesService.GetById(id);
             if (item == null) return NotFound();
 
             return Ok(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] ValueDTO valueDTO)
+        public async Task<IActionResult> Create([FromBody] ValueDTO valueDTO)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            valuesService.Create(valueDTO);
+            await valuesService.Create(valueDTO);
 
             return Ok();
         }
 
         [HttpPut]
-        public IActionResult Edit([FromBody] ValueDTO valueDTO)
+        public async Task<IActionResult> Edit([FromBody] ValueDTO valueDTO)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            valuesService.Update(valueDTO);
+            await valuesService.Update(valueDTO);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] uint id)
         {
-            valuesService.Delete(id);
+            await valuesService.Delete(id);
 
             return Ok();
         }

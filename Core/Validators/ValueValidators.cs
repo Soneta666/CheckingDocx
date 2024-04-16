@@ -12,7 +12,7 @@ namespace Core.Validators
     {
         public ValueValidators() 
         {
-            RuleFor(v => v.Value)
+            RuleFor(v => v.Name)
                 .NotEmpty()
                 .NotNull()
                 .MinimumLength(1);

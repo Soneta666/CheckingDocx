@@ -1,5 +1,4 @@
 ﻿using Core.DTOs;
-using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +9,14 @@ namespace Core.Interfaces
 {
     public interface IRequirementsService
     {
-        List<Requirement> GetAll();
+        Task<IEnumerable<RequirementDTO>> GetAll();
 
-        Requirement? GetById(int id);
+        Task<RequirementDTO?> GetById(uint id);
 
-        void Create(RequirementDTO requirement);
+        Task Create(RequirementDTO requirement);
 
-        void Update(RequirementDTO requirement);
+        Task Update(RequirementDTO requirement);
 
-        void Delete(int id);
+        Task Delete(uint id);
     }
 }
