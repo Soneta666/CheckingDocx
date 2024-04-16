@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Specification;
 
 namespace Core.Interfaces
 {
@@ -11,7 +6,7 @@ namespace Core.Interfaces
     {
         Task<IEnumerable<TEntity>> GetAll();
 
-        Task<TEntity> GetByID(object id);
+        Task<TEntity?> GetById(object id);
 
         Task Insert(TEntity entity);
 
@@ -20,6 +15,9 @@ namespace Core.Interfaces
         Task Delete(TEntity entityToDelete);
 
         Task Update(TEntity entityToUpdate);
+
+        Task<TEntity?> GetItemBySpec(ISpecification<TEntity> specification);
+        Task<IEnumerable<TEntity>> GetListBySpec(ISpecification<TEntity> specification);
 
         Task Save();
     }

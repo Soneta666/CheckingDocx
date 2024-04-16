@@ -14,6 +14,6 @@ namespace Core.DTOs
         public string Name { get; set; }
 
         public uint RequirementId { get; set; }
-        public RequirementDTO Requirement { get; set; }
+        public RequirementDTO? Requirement { get; set; }
     }
 }

@@ -11,12 +11,12 @@ namespace Core.Interfaces
     {
         Task<IEnumerable<RequirementDTO>> GetAll();
 
-        Task<RequirementDTO?> GetById(int id);
+        Task<RequirementDTO?> GetById(uint id);
 
         Task Create(RequirementDTO requirement);
 
         Task Update(RequirementDTO requirement);
 
-        Task Delete(int id);
+        Task Delete(uint id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Core.DTOs;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,11 @@ namespace Core.Services
             return mapper.Map<IEnumerable<RequirementDTO>>(result);
         }
         
-        public async RequirementDTO? GetById(int id)
+        public async Task<RequirementDTO?> GetById(uint id)
         {
             if(id < 0) return null;
 
-            Requirement requirement = await requirementRepo.GetByID(id);
+            Requirement requirement = await requirementRepo.GetItemBySpec(new Requirements.ById(id));
 
             return mapper.Map<RequirementDTO>(requirement);
         }
@@ -48,9 +49,9 @@ namespace Core.Services
             await requirementRepo.Save();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(uint id)
         {
-            if(await requirementRepo.GetByID(id) == null) return;
+            if(await requirementRepo.GetById(id) == null) return;
 
             await requirementRepo.Delete(id);
             await requirementRepo.Save();

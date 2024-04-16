@@ -1,6 +1,7 @@
 ﻿using Core.DTOs;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,16 @@ namespace Core.Services
 
         public async Task<IEnumerable<ValueDTO>> GetAll()
         {
-            var result = await valueRepo.GetAll();
+            var result = await valueRepo.GetListBySpec(new Values.GetAll());
+
             return mapper.Map<IEnumerable<ValueDTO>>(result);
         }
 
-        public async Task<ValueDTO?> GetById(int id)
+        public async Task<ValueDTO?> GetById(uint id)
         {
             if (id < 0) return null;
 
-            var value = valueRepo.GetByID(id);
+            Value? value = await valueRepo.GetItemBySpec(new Values.ById(id));
 
             return mapper.Map<ValueDTO>(value);
         }
@@ -48,9 +50,9 @@ namespace Core.Services
             await valueRepo.Save();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(uint id)
         {
-            if (await valueRepo.GetByID(id) == null) return;
+            if (await valueRepo.GetItemBySpec(new Values.ById(id)) == null) return;
 
             await valueRepo.Delete(id);
             await valueRepo.Save();

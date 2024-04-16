@@ -22,10 +22,10 @@ namespace CheckingDocx.Controllers
             return Ok(await valuesService.GetAll());
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] uint id)
         {
-            var item = valuesService.GetById(id);
+            var item = await valuesService.GetById(id);
             if (item == null) return NotFound();
 
             return Ok(item);
@@ -52,7 +52,7 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] uint id)
         {
             await valuesService.Delete(id);
 

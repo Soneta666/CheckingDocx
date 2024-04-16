@@ -10,12 +10,12 @@ namespace Core.Interfaces
     public interface IValuesService
     {
         Task<IEnumerable<ValueDTO>> GetAll();
-        Task<ValueDTO?> GetById(int id);
+        Task<ValueDTO?> GetById(uint id);
 
         Task Create(ValueDTO value);
 
         Task Update(ValueDTO value);
 
-        Task Delete(int id);
+        Task Delete(uint id);
     }
 }
