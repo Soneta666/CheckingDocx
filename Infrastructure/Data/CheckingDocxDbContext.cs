@@ -30,7 +30,7 @@ namespace Infrastructure.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            string connStr = "Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CheckingDocx; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            string connStr = "Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CheckingDocx1; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             optionsBuilder.UseSqlServer(connStr);
         }
 
