@@ -9,7 +9,6 @@ namespace Core.Entities
 {
     public class Value
     {
-        [Key]
         public uint Id { get; set; }
 
         public string Name { get; set; }
