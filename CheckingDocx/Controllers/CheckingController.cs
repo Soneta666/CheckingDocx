@@ -1,9 +1,7 @@
-﻿//using DocumentFormat.OpenXml.Drawing;
-//using DocumentFormat.OpenXml.Packaging;
-//using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
@@ -15,47 +13,11 @@ namespace CheckingDocx.Controllers
     public class CheckingController : ControllerBase
     {
         [HttpPost("getSize")]
-        public async Task<IActionResult> GetSize(IFormFile file)
+        public async Task<IActionResult> GetSize(IFormFile file, [FromForm] string styleName = "Normal")
         {
             try
             {
-                List<string?> sizes = Sizes(file);
-
-
-                //using (DocX doc = DocX.Load(file))
-
-                // Отримання всіх абзаців документу
-                //    var paragraphs = doc.Paragraphs;
-
-                //    // Проходження по кожному абзаці
-                //    foreach (var paragraph in paragraphs)
-                //    {
-                //        // Отримання всіх рядків у поточному абзаці
-                //        //var runs = paragraph.Runs;
-
-                //        // Проходження по кожному рядку
-                //        //foreach (var run in runs)
-                //        //{
-                //        // Отримання розміру шрифту для поточного рядка
-                //        var fontSize1 = paragraph.FontSize(10);
-
-                //            // Перевірка, чи розмір шрифту не дорівнює нулю
-
-
-                //    }
-                //}
-                ////using (var stream = file.OpenReadStream())
-                ////{
-                //using (var memoryStream = new MemoryStream())
-                //{
-                //    // Копіюємо вміст файлу у пам'ять
-                //    await file.CopyToAsync(memoryStream);
-                //    memoryStream.Position = 0;
-                //    string fileName = file.Name;
-
-                // Відкриваємо WordprocessingDocument з MemoryStream
-
-
+                List<string?> sizes = Sizes(file, styleName);
 
                 if (sizes != null)
                 {
@@ -63,7 +25,7 @@ namespace CheckingDocx.Controllers
                 }
                 else
                 {
-                    return BadRequest("Розмір шрифту не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -73,23 +35,23 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpPost("checkingSize")]
-        public async Task<IActionResult> CheckingSize(IFormFile file, [FromForm] string fontSize)
+        public async Task<IActionResult> CheckingSize(IFormFile file, [FromForm] string value, [FromForm] string styleName = "Normal")
         {
             try
             {
-                List<string?> sizes = Sizes(file);
+                List<string?> sizes = Sizes(file, styleName);
 
                 if (sizes != null)
                 {
-                    int tmp = sizes.FindAll(f => f == fontSize).Count;
+                    int tmp = sizes.FindAll(f => f == value).Count;
                     if (tmp == sizes.Count)
-                        return Ok("Є тільки цей стиль");
+                        return Ok("Тільки цей");
                     else
-                        return Ok("Є ще інші стилі");
+                        return Ok("Є інші");
                 }
                 else
                 {
-                    return BadRequest("Шрифт не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -112,7 +74,7 @@ namespace CheckingDocx.Controllers
                 }
                 else
                 {
-                    return BadRequest("Шрифт не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -122,7 +84,7 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpPost("checkingFontFamily")]
-        public async Task<IActionResult> CheckingFontFamily(IFormFile file, [FromForm]string fontFamily)
+        public async Task<IActionResult> CheckingFontFamily(IFormFile file, [FromForm]string value)
         {
             try
             {
@@ -130,15 +92,15 @@ namespace CheckingDocx.Controllers
 
                 if (fontFamilies != null)
                 {
-                    int tmp = fontFamilies.FindAll(f => f == fontFamily).Count;
+                    int tmp = fontFamilies.FindAll(f => f == value).Count;
                     if (tmp == fontFamilies.Count)
-                        return Ok("Є тільки цей стиль");
+                        return Ok("Тільки цей");
                     else
-                        return Ok("Є ще інші стилі");
+                        return Ok("Є інші");
                 }
                 else
                 {
-                    return BadRequest("Шрифт не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -161,7 +123,7 @@ namespace CheckingDocx.Controllers
                 }
                 else
                 {
-                    return BadRequest("Інтервальний відступ не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -171,23 +133,23 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpPost("checkingLineSpacing")]
-        public async Task<IActionResult> CheckingLineSpacing(IFormFile file, [FromForm]string lineSpacing)
+        public async Task<IActionResult> CheckingLineSpacing(IFormFile file, [FromForm]string value)
         {
             try
             {
-                List<string?> spacing = Families(file);
+                List<string?> spacing = LineSpacing(file);
 
                 if (spacing != null)
                 {
-                    int tmp = spacing.FindAll(f => f == lineSpacing).Count;
+                    int tmp = spacing.FindAll(f => f == value).Count;
                     if (tmp == spacing.Count)
-                        return Ok("Є тільки цей інтервальний відступ");
+                        return Ok("Тільки цей");
                     else
-                        return Ok("Є ще інші інтервальні відступи");
+                        return Ok("Є інші");
                 }
                 else
                 {
-                    return BadRequest("Інтервальний відступ не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -210,7 +172,7 @@ namespace CheckingDocx.Controllers
                 }
                 else
                 {
-                    return BadRequest("Відступи не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -220,7 +182,7 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpPost("checkingMargins")]
-        public async Task<IActionResult> CheckingMargins(IFormFile file, [FromForm]List<float> margin)
+        public async Task<IActionResult> CheckingMargins(IFormFile file, [FromForm]List<float> value)
         {
             try
             {
@@ -232,19 +194,19 @@ namespace CheckingDocx.Controllers
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            if (!(m[i] <= margin[i] && margin[i] <= m[i] + 0.1))
+                            if (!(m[i] <= value[i] && value[i] <= m[i] + 0.1))
                                 return false;
                         }
                         return true;
                     }).Count;
                     if (tmp == margins.Count)
-                        return Ok("Є тільки ці відступи");
+                        return Ok("Тільки цей");
                     else
-                        return Ok("Є ще інші відступи");
+                        return Ok("Є інші");
                 }
                 else
                 {
-                    return BadRequest("Відступи не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -266,7 +228,7 @@ namespace CheckingDocx.Controllers
                 }
                 else
                 {
-                    return BadRequest("Відступи не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -276,7 +238,7 @@ namespace CheckingDocx.Controllers
         }
 
         [HttpPost("checkingPagesSize")]
-        public async Task<IActionResult> CheckingPagesSize(IFormFile file, [FromForm]List<float> pageSized)
+        public async Task<IActionResult> CheckingPagesSize(IFormFile file, [FromForm]List<float> value)
         {
             try
             {
@@ -288,19 +250,19 @@ namespace CheckingDocx.Controllers
                     {
                         for (int i = 0; i < 2; i++)
                         {
-                            if (!(p[i] <= pageSized[i] && pageSized[i] <= p[i] + 0.1))
+                            if (!(p[i] <= value[i] && value[i] <= p[i] + 0.1))
                                 return false;
                         }
                         return true;
                     }).Count;
                     if (tmp == pagesSize.Count)
-                        return Ok("Є тільки ці відступи");
+                        return Ok("Тільки цей");
                     else
-                        return Ok("Є ще інші відступи");
+                        return Ok("Є інші");
                 }
                 else
                 {
-                    return BadRequest("Відступи не вдалося знайти.");
+                    return BadRequest("Не вдалося знайти.");
                 }
             }
             catch (Exception ex)
@@ -308,8 +270,89 @@ namespace CheckingDocx.Controllers
                 return StatusCode(500, $"помилка обробки файлу: {ex.Message}");
             }
         }
-        
-        
+
+
+        [HttpPost("getAlignment")]
+        public async Task<IActionResult> GetAlignment(IFormFile file)
+        {
+            try
+            {
+                List<string?> alignments = Alignments(file);
+
+                if (alignments != null)
+                {
+                    return Ok(alignments);
+                }
+                else
+                {
+                    return BadRequest("Не вдалося знайти.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"помилка обробки файлу: {ex.Message}");
+            }
+        }
+
+        [HttpPost("checkingAlignment")]
+        public async Task<IActionResult> CheckingAlignment(IFormFile file, [FromForm] string value)
+        {
+            try
+            {
+                List<string?> alignments = Alignments(file);
+
+                if (alignments != null)
+                {
+                    int tmp = alignments.FindAll(p =>
+                    {
+                        for (int i = 0; i < 2; i++)
+                        {
+                            if (!(p[i] <= value[i] && value[i] <= p[i] + 0.1))
+                                return false;
+                        }
+                        return true;
+                    }).Count;
+                    if (tmp == alignments.Count)
+                        return Ok("Тільки цей");
+                    else
+                        return Ok("Є інші");
+                }
+                else
+                {
+                    return BadRequest("Не вдалося знайти.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"помилка обробки файлу: {ex.Message}");
+            }
+        }
+
+
+
+        [HttpPost("Picture")]
+        public async Task<IActionResult> Picture(IFormFile file)
+        {
+            try
+            {
+                List<string?> pictures = Pictures(file);
+
+                if (pictures != null)
+                {
+                    return Ok(pictures);
+                }
+                else
+                {
+                    return BadRequest("Не вдалося знайти.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"помилка обробки файлу: {ex.Message}");
+            }
+        }
+
+
 
         private List<string> Families(IFormFile file)
         {
@@ -332,21 +375,28 @@ namespace CheckingDocx.Controllers
             }
             return fontFamilies;
         }
-        private List<string> Sizes(IFormFile file)
+        private List<string> Sizes(IFormFile file, string styleName)
         {
             List<string?> sizes = new();
             using (var stream = file.OpenReadStream())
             {
                 using (DocX document = DocX.Load(stream))
                 {
+                    string pattern = styleName;
+                    if(styleName == "Heading")
+                           pattern = styleName + @"[2-9]";
                     foreach (var paragraph in document.Paragraphs)
                     {
-                        if (paragraph.MagicText.Count != 0)
+                        if (paragraph.MagicText.Count != 0 && Regex.IsMatch(paragraph.StyleName, pattern))
                             if (paragraph.MagicText[0].formatting.Size != null)
                             {
                                 string str = paragraph.MagicText[0].formatting.Size.ToString();
                                 if (!sizes.Contains(str))
                                     sizes.Add(str);
+                                if(paragraph.MagicText[0].formatting.Size != 14)
+                                {
+                                    string str1 = "DFBh";
+                                }
                             }
                     }
                 }
@@ -364,7 +414,7 @@ namespace CheckingDocx.Controllers
                     {
                         if (paragraph.LineSpacing != null)
                         {
-                            string str = (paragraph.LineSpacing / 12).ToString();
+                            string str = (paragraph.LineSpacing / 12).ToString().Replace(',', '.');
                             if (!spacing.Contains(str))
                                 spacing.Add(str);
                         }
@@ -405,6 +455,49 @@ namespace CheckingDocx.Controllers
             }
             return pagesSize;
         }
-        
+        private List<string> Alignments(IFormFile file)
+        {
+            List<string?> alignments = new();
+            using (var stream = file.OpenReadStream())
+            {
+                using (DocX document = DocX.Load(stream))
+                {
+                    foreach (var paragraph in document.Paragraphs)
+                    {
+                        if (paragraph.Alignment != null)
+                        {
+                            string str = paragraph.Alignment.ToString();
+                            if (!alignments.Contains(str))
+                                alignments.Add(str);
+                        }
+                    }
+                }
+            }
+            return alignments;
+        }
+        private List<string> Pictures(IFormFile file)
+        {
+            List<string?> pictures = new();
+            using (var stream = file.OpenReadStream())
+            {
+                using (DocX document = DocX.Load(stream))
+                {
+                    foreach (var paragraph in document.Paragraphs)
+                    {
+                        if (paragraph.MagicText.Count == 0 && paragraph.Pictures.Count != 0)
+                        {
+                            string pattern = @"^Рис\. \d+(\.\d+)*\. .+$";
+                            string str = paragraph.NextParagraph.Text.ToString();
+                            if (!Regex.IsMatch(str, pattern))
+                                pictures.Add("Рисунок " + paragraph.Pictures[0].Name + " неправильно підписаний");
+                        }
+                    }
+                    if (pictures.Count == 0)
+                        pictures.Add("Підписані правильно");
+                }
+            }
+            return pictures;
+        }
+
     }
 }
