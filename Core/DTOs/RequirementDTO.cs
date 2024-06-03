@@ -11,5 +11,7 @@ namespace Core.DTOs
         public uint Id {  get; set; }
 
         public string Name { get; set; }
+        
+        public string GetSearch { get; set; }
     }
 }

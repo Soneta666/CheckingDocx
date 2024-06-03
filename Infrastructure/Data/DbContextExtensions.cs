@@ -18,16 +18,19 @@ namespace Infrastructure.Data
                 {
                     Id = 1,
                     Name = "Шрифт",
+                    GetSearch = "FontFamily"
                 },
                 new Requirement()
                 {
                     Id = 2,
                     Name = "Розмір шрифту",
+                    GetSearch = "Size"
                 },
                 new Requirement()
                 {
                     Id = 3,
                     Name = "Вирівняти",
+                    GetSearch = "Size"
                 },
             });
         }

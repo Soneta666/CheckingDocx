@@ -12,6 +12,8 @@ namespace Core.Entities
 
         public string Name { get; set; }
 
+        public string GetSearch { get; set; }
+
         public ICollection<Value> Values { get; set; }
         
     }

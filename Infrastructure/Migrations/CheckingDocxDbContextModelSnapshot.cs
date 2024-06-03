@@ -29,6 +29,10 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("GetSearch")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -41,16 +45,19 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
+                            GetSearch = "FontFamily",
                             Name = "Шрифт"
                         },
                         new
                         {
                             Id = 2L,
+                            GetSearch = "Size",
                             Name = "Розмір шрифту"
                         },
                         new
                         {
                             Id = 3L,
+                            GetSearch = "Size",
                             Name = "Вирівняти"
                         });
                 });
