@@ -393,10 +393,6 @@ namespace CheckingDocx.Controllers
                                 string str = paragraph.MagicText[0].formatting.Size.ToString();
                                 if (!sizes.Contains(str))
                                     sizes.Add(str);
-                                if(paragraph.MagicText[0].formatting.Size != 14)
-                                {
-                                    string str1 = "DFBh";
-                                }
                             }
                     }
                 }
