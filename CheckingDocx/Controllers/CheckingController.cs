@@ -363,13 +363,17 @@ namespace CheckingDocx.Controllers
                 {
                     foreach (var paragraph in document.Paragraphs)
                     {
-                        if (paragraph.MagicText.Count != 0)
-                            if (paragraph.MagicText[0].formatting.FontFamily != null)
+                        for (int i = 0; i < paragraph.MagicText.Count; i++)
+                        {
+                            if (paragraph.MagicText[i].formatting.FontFamily != null)
                             {
-                                string str = paragraph.MagicText[0].formatting.FontFamily.ToString();
-                                if (!fontFamilies.Contains(str))
-                                    fontFamilies.Add(str);
+
+                                string str = paragraph.MagicText[i].formatting.FontFamily.ToString();
+                                if (!(str == "Cardo" && paragraph.Text.Contains('→')))
+                                    if (!fontFamilies.Contains(str))
+                                        fontFamilies.Add(str);
                             }
+                        }
                     }
                 }
             }
@@ -387,13 +391,15 @@ namespace CheckingDocx.Controllers
                            pattern = styleName + @"[2-9]";
                     foreach (var paragraph in document.Paragraphs)
                     {
-                        if (paragraph.MagicText.Count != 0 && Regex.IsMatch(paragraph.StyleName, pattern))
-                            if (paragraph.MagicText[0].formatting.Size != null)
+                        for (int i = 0; i < paragraph.MagicText.Count; i++)
+                        {
+                            if (paragraph.MagicText[i].formatting.Size != null && Regex.IsMatch(paragraph.StyleName, pattern))
                             {
-                                string str = paragraph.MagicText[0].formatting.Size.ToString();
+                                string str = paragraph.MagicText[i].formatting.Size.ToString();
                                 if (!sizes.Contains(str))
                                     sizes.Add(str);
                             }
+                        }
                     }
                 }
             }
@@ -480,12 +486,15 @@ namespace CheckingDocx.Controllers
                 {
                     foreach (var paragraph in document.Paragraphs)
                     {
-                        if (paragraph.MagicText.Count == 0 && paragraph.Pictures.Count != 0)
+                        for (int i = 0; i < paragraph.MagicText.Count; i++)
                         {
-                            string pattern = @"^Рис\. \d+(\.\d+)*\. .+$";
-                            string str = paragraph.NextParagraph.Text.ToString();
-                            if (!Regex.IsMatch(str, pattern))
-                                pictures.Add("Рисунок " + paragraph.Pictures[0].Name + " неправильно підписаний");
+                            if (paragraph.Pictures.Count != 0)
+                            {
+                                string pattern = @"^Рис\. \d+(\.\d+)*\. .+$";
+                                string str = paragraph.NextParagraph.Text.ToString();
+                                if (!Regex.IsMatch(str, pattern))
+                                    pictures.Add("Рисунок " + paragraph.Pictures[0].Name + " неправильно підписаний");
+                            }
                         }
                     }
                     if (pictures.Count == 0)
